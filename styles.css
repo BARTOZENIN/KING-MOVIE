@@ -1,0 +1,198 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1c1c1c;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #b773b6;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.movie-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centraliza os itens */
+    padding: 20px;
+    gap: 20px; /* Espaçamento entre os cards */
+}
+
+.movie-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 100%; /* Largura total por padrão */
+    max-width: 250px; /* Limita a largura máxima */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave com brilho */
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transição suave */
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 25px rgba(183, 115, 182, 1); /* Aumenta o brilho ao passar o mouse */
+}
+
+.movie-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd; /* Adiciona uma linha separadora entre imagem e detalhes */
+}
+
+.movie-card h3 {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px 0;
+    padding: 0 10px;
+}
+
+.movie-card p {
+    padding: 0 10px;
+    font-size: 14px;
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* Novo estilo para o card de detalhes */
+.details-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 100%; /* Largura total por padrão */
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.details-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 25px rgba(183, 115, 182, 1); /* Aumenta o brilho ao passar o mouse */
+}
+
+.details-link {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: #b773b6;
+    color: #ffffffbb;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: auto;
+}
+
+.details-link:hover {
+    background-color: #b773b6;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+}
+
+header a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+}
+
+header a img {
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+header h1 {
+    font-size: 28px;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+}
+
+.search-section {
+    display: flex;
+    justify-content: center; /* Centraliza a barra de pesquisa */
+    margin: 20px 0;
+}
+
+.search-section input {
+    padding: 10px;
+    width: 70%; /* Ocupa 70% da largura do container */
+    max-width: 400px; /* Largura máxima */
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.search-section button {
+    padding: 10px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-section button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .movie-card {
+        max-width: 45%; /* Ajusta a largura dos cards para caberem dois por linha */
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    .search-section {
+        flex-direction: column; /* Empilha os elementos no mobile */
+        align-items: center;
+    }
+
+    .search-section input,
+    .search-section button {
+        width: 90%; /* Ocupa quase toda a largura no mobile */
+        margin: 5px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .movie-card {
+        max-width: 45%; /* Dois cards por linha */
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-card {
+        max-width: 100%; /* Cada card ocupa toda a largura */
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    .search-section input {
+        width: 100%; /* Aumenta a largura do input no mobile */
+    }
+
+    .search-section button {
+        width: 100%; /* Aumenta a largura do botão no mobile */
+        margin-left: 0; /* Remove a margem */
+    }
+}

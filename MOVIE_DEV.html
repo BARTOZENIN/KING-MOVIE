@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes em Destaque</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Adicione esse código dentro da tag <head> do seu HTML -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+</script>
+
+</head>
+
+<body>
+    <header>
+        <a href="">
+            <img src="logo.png" alt="Logo">
+            <h1>KING MOVIE.DEV</h1>
+        </a>
+
+
+    </header>
+
+    <main>
+        <section class="search-section">
+            <input type="text" id="searchInput" placeholder="Pesquise por um filme..." />
+            <button id="searchButton">Pesquisar</button>
+        </section>
+
+        <section id="featuredMovies" class="movie-container">
+            <h2>Filmes em Destaque</h2>
+        </section>
+    </main>
+
+    <script>
+        // Dados dos filmes
+        const featuredMovies = [
+            {
+                title: "Sonic, o Ouriço 3",
+                poster_path: "/zOpe0eHsq0A2NvNyBbtT6sj53qV.jpg",
+                overview: "Sonic, Knuckles e Tails se reúnem contra o vilão Shadow para salvar o planeta.",
+                release_date: "2024-12-19",
+                id: 939243
+            },
+
+            {
+                title: "Venom: A Última Dança 3",
+                poster_path: "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg",
+                overview: "Eddie e Venom estão em fuga, enfrentando novos inimigos e perigos.",
+                release_date: "2024-12-18",
+                id: 912649
+            },
+
+
+
+        ];
+
+        function displayFeaturedMovies(movies) {
+            const featuredMoviesSection = document.getElementById("featuredMovies");
+
+            // Limpa a seção para não duplicar conteúdo
+            featuredMoviesSection.innerHTML = "";
+
+            // Loop para adicionar cada filme à seção
+            movies.forEach(movie => {
+                const movieCard = document.createElement("div");
+                movieCard.classList.add("movie-card");
+
+                movieCard.innerHTML = `
+                    <h3>${movie.title}</h3>
+                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                    <p>${movie.overview}</p>
+                    <p><strong>Data de Lançamento:</strong> ${movie.release_date}</p>
+                    <a href="detalhes.html?movieId=${movie.id}" class="details-link">Ver Detalhes</a>
+                `;
+
+                // Adiciona o card de filme à seção
+                featuredMoviesSection.appendChild(movieCard);
+            });
+        }
+
+        // Função de filtro de filmes baseado no texto da pesquisa
+        function filterMovies(query) {
+            // Filtra os filmes com base no título
+            const filteredMovies = featuredMovies.filter(movie =>
+                movie.title.toLowerCase().includes(query.toLowerCase())
+            );
+
+            // Exibe os filmes filtrados
+            displayFeaturedMovies(filteredMovies);
+        }
+
+        // Evento de clique do botão de pesquisa
+        document.getElementById("searchButton").addEventListener("click", () => {
+            const query = document.getElementById("searchInput").value;
+            if (query) {
+                filterMovies(query); // Filtra e exibe os filmes
+            } else {
+                displayFeaturedMovies(featuredMovies); // Exibe todos os filmes caso o campo esteja vazio
+            }
+        });
+
+        // Exibe todos os filmes ao carregar a página
+        window.onload = () => displayFeaturedMovies(featuredMovies);
+    </script>
+</body>
+
+</html>

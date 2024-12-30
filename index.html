@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Estilos básicos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #003366, #005b96);
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #1a2d57;
+            color: white;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background: #005b96;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .login-button:hover {
+            background: #003d66;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDkydvO-JugqPF_vjp57DBZIxo_zDwiSRE",
+            authDomain: "movie-dev-d6155.firebaseapp.com",
+            projectId: "movie-dev-d6155",
+            storageBucket: "movie-dev-d6155.firebasestorage.app",
+            messagingSenderId: "655831807701",
+            appId: "1:655831807701:web:155f3884e5cb0e8d3f145c"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore();
+        const auth = getAuth();
+
+        // Função para salvar dados no Firestore após o login
+        const saveUserData = (user) => {
+            const userRef = doc(db, "users", user.uid);
+            const userData = {
+                email: user.email,
+                uid: user.uid,
+            };
+
+            setDoc(userRef, userData)
+                .then(() => {
+                    window.location.href = 'MOVIE_DEV.html'; // Redireciona após salvar dados
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+        };
+
+        // Lógica do botão de login
+        document.getElementById('loginForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Autenticação no Firebase
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    localStorage.setItem('local', user.uid); // Salva o UID no localStorage
+                    saveUserData(user);  // Salva os dados do usuário no Firestore
+                })
+                .catch((error) => {
+                    console.error("Error signing in: ", error);
+                    const errorMessage = document.getElementById('errorMessage');
+                    errorMessage.style.display = 'block'; // Exibe a mensagem de erro
+                });
+        });
+    </script>
+
+</head>
+<body>
+
+  <div class="login-container">
+      <h2>Login</h2>
+      <form id="loginForm">
+          <input type="email" id="email" class="input-field" placeholder="E-mail" required>
+          <input type="password" id="password" class="input-field" placeholder="Senha" required>
+          <button type="submit" class="login-button">Entrar</button>
+      </form>
+      <p id="errorMessage" class="error-message">E-mail ou senha incorretos!</p>
+  </div>
+
+</body>
+</html>

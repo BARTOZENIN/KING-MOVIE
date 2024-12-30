@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Filme</title>
+    <!-- Link para o Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Seu CSS personalizado -->
+</head>
+
+<body>
+
+   <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1c1c1c;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Impede rolagem horizontal */
+}
+
+header {
+    background-color: #b773b6;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.movie-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centraliza os itens */
+    padding: 20px;
+    gap: 20px; /* Espaçamento entre os itens */
+    max-width: 100%; /* Limita a largura da área */
+    overflow: hidden; /* Garante que não apareça barra de rolagem */
+}
+
+/* Estilo para a imagem */
+.movie-image {
+    max-width: 100%; /* Imagem ocupa toda a largura disponível */
+    height: auto; /* Mantém a altura proporcional */
+    object-fit: cover; /* Garante que a imagem cubra a área sem ser cortada */
+    border-radius: 10px; /* Bordas arredondadas na imagem */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+/* Estilo para a seção de detalhes */
+.movie-details {
+    background-color: #fff;
+    color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 100%; /* Garante que o conteúdo não ultrapasse a tela */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+/* Títulos e parágrafos dentro dos detalhes */
+.movie-details h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.movie-details p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Garantir que o layout seja responsivo e não crie barras de rolagem */
+@media (max-width: 768px) {
+    .movie-container {
+        flex-direction: column; /* Alinha imagem e detalhes verticalmente em telas menores */
+    }
+
+    .movie-image {
+        max-width: 100%; /* Ajusta imagem para 100% da largura */
+    }
+
+    .movie-details {
+        max-width: 100%; /* Detalhes também ocupam 100% da largura */
+    }
+}
+
+    </style>
+    <header class="bg-dark text-white py-3">
+        <div class="container">
+            <a href="MOVIE_DEV.html" title="Voltar" class="btn btn-link text-white">
+                <img src="back.png" alt="Voltar" style="width: 50px;">
+                Voltar
+            </a>
+            <h1 class="text-center">Detalhes do Filme</h1>
+        </div>
+    </header>
+
+    <main class="container mt-4">
+        <div id="movieDetails" class="row"></div>
+    </main>
+
+    <!-- Script -->
+    <script>
+        const apiKey = "57e77e7f90787e50a9257f3d576cce14"; // Substitua pela sua chave da API
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('movieId'); // Pega o ID da URL
+
+        // Links de download personalizados
+        const movieDownloadLinks = {
+            912649: "https://drive.google.com/file/d/17xxBAFZFbZHXwgXBtFXf-F032mmxHkOS/view?usp=drive_link",
+            321528: "https://drive.google.com/file/d/17xxBAFZFbZHXwgXBtFXf-F032mmxHkOS/view?usp=drive_link",
+        };
+
+        async function fetchMovieDetails() {
+            const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar informações do filme. Status: ${response.status}`);
+                }
+                const movie = await response.json();
+
+                displayMovieDetails(movie);
+            } catch (error) {
+                const movieDetails = document.getElementById("movieDetails");
+                movieDetails.innerHTML = `<p>${error.message}</p>`;
+            }
+        }
+
+        function displayMovieDetails(movie) {
+            const movieDetails = document.getElementById("movieDetails");
+
+            // Mapear gêneros, caso estejam disponíveis
+            const genres = movie.genres ? movie.genres.map(genre => genre.name).join(", ") : "Não informado";
+
+            // Determina o link de download com base no ID do filme
+            const downloadLink = movieDownloadLinks[movie.id] || `https://example.com/download/${movie.id}`;
+
+            movieDetails.innerHTML = `
+                <div class="col-12 col-md-6 mb-4">
+                    <div class="card luminoso-card">
+                        <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}" class="card-img-top">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 mb-4">
+                    <div class="card p-3 luminoso-card">
+                        <h2>${movie.title}</h2>
+                        <p><strong>Descrição:</strong> ${movie.overview}</p>
+                        <p><strong>Data de Lançamento:</strong> ${movie.release_date}</p>
+                        <p><strong>Avaliação:</strong> ${movie.vote_average} / 10 (${movie.vote_count} votos)</p>
+                        <p><strong>Gêneros:</strong> ${genres}</p>
+                        <p><strong>Classificação Etária:</strong> ${movie.adult ? "18+" : "Livre"}</p>
+                        <a href="${downloadLink}" target="_blank" class="btn btn-primary">Baixar Filme</a>
+                        <a href="https://example.com/watch/${movie.id}" target="_blank" class="btn btn-secondary">Assistir Filme</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.onload = fetchMovieDetails;
+    </script>
+
+    <!-- Link para o Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
